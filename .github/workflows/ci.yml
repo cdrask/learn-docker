@@ -2,45 +2,135 @@ name: ci
 
 on:
   push:
+    branches:
+      - main
   pull_request:
+
+permissions:
+  contents: read
+  packages: read
 
 jobs:
   linux-container:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+        build_type: [Debug, Release]
+
     container:
-      image: ghcr.io/your-org/egfx-linux-ci:latest
+      image: ghcr.io/${{ github.repository_owner }}/egfx-linux-ci:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    env:
+      CCACHE_DIR: /tmp/.ccache
+
     steps:
       - uses: actions/checkout@v4
+
+      - name: Select compiler
+        run: |
+          if [ "${{ matrix.compiler }}" = "clang" ]; then
+            echo "CC=clang" >> "$GITHUB_ENV"
+            echo "CXX=clang++" >> "$GITHUB_ENV"
+          else
+            echo "CC=gcc" >> "$GITHUB_ENV"
+            echo "CXX=g++" >> "$GITHUB_ENV"
+          fi
+
+      - name: Restore ccache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.ccache
+          key: ccache-${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}-${{ github.ref_name }}
+          restore-keys: |
+            ccache-${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}-
+
       - name: Configure
-        run: cmake -S . -B build -G Ninja -DEGFX_BUILD_SIMULATOR=ON -DEGFX_ENABLE_TESTS=ON
+        run: cmake --preset ci-linux-${{ matrix.compiler }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
       - name: Build
-        run: cmake --build build --parallel
+        run: cmake --build --preset ci-linux-${{ matrix.compiler }}
+
       - name: Test
-        run: ctest --test-dir build --output-on-failure
+        run: |
+          mkdir -p artifacts
+          ctest --preset ci-linux-${{ matrix.compiler }} --output-on-failure | tee artifacts/ctest-linux-${{ matrix.compiler }}-${{ matrix.build_type }}.log
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-${{ matrix.compiler }}-${{ matrix.build_type }}
+          path: |
+            build/ci-linux-${{ matrix.compiler }}/**/libegfx.a
+            build/ci-linux-${{ matrix.compiler }}/**/egfx_sim
+            artifacts/ctest-linux-${{ matrix.compiler }}-${{ matrix.build_type }}.log
 
   windows-native:
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Debug, Release]
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@v5
+
       - name: Configure
         shell: pwsh
-        run: cmake -S . -B build -G Ninja -DEGFX_BUILD_SIMULATOR=ON -DEGFX_ENABLE_TESTS=ON
+        run: cmake --preset ci-windows-msvc -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
       - name: Build
         shell: pwsh
-        run: cmake --build build --parallel
+        run: cmake --build --preset ci-windows-msvc
+
       - name: Test
         shell: pwsh
-        run: ctest --test-dir build --output-on-failure
+        run: |
+          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+          ctest --preset ci-windows-msvc --output-on-failure 2>&1 | Tee-Object -FilePath artifacts/ctest-windows-${{ matrix.build_type }}.log
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-msvc-${{ matrix.build_type }}
+          path: |
+            build/ci-windows-msvc/**/*.lib
+            build/ci-windows-msvc/**/egfx_sim.exe
+            artifacts/ctest-windows-${{ matrix.build_type }}.log
 
   macos-native:
     runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Debug, Release]
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Configure
-        run: cmake -S . -B build -G Ninja -DEGFX_BUILD_SIMULATOR=ON -DEGFX_ENABLE_TESTS=ON
+        run: cmake --preset ci-macos-clang -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
       - name: Build
-        run: cmake --build build --parallel
+        run: cmake --build --preset ci-macos-clang
+
       - name: Test
-        run: ctest --test-dir build --output-on-failure
+        run: |
+          mkdir -p artifacts
+          ctest --preset ci-macos-clang --output-on-failure | tee artifacts/ctest-macos-${{ matrix.build_type }}.log
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-clang-${{ matrix.build_type }}
+          path: |
+            build/ci-macos-clang/**/libegfx.a
+            build/ci-macos-clang/**/egfx_sim
+            artifacts/ctest-macos-${{ matrix.build_type }}.log
