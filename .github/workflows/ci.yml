@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  linux-container:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/your-org/egfx-linux-ci:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -G Ninja -DEGFX_BUILD_SIMULATOR=ON -DEGFX_ENABLE_TESTS=ON
+      - name: Build
+        run: cmake --build build --parallel
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  windows-native:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@v5
+      - name: Configure
+        shell: pwsh
+        run: cmake -S . -B build -G Ninja -DEGFX_BUILD_SIMULATOR=ON -DEGFX_ENABLE_TESTS=ON
+      - name: Build
+        shell: pwsh
+        run: cmake --build build --parallel
+      - name: Test
+        shell: pwsh
+        run: ctest --test-dir build --output-on-failure
+
+  macos-native:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -G Ninja -DEGFX_BUILD_SIMULATOR=ON -DEGFX_ENABLE_TESTS=ON
+      - name: Build
+        run: cmake --build build --parallel
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
