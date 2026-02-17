@@ -1,0 +1,121 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base-ninja",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "EGFX_BUILD_SIMULATOR": "ON",
+        "EGFX_ENABLE_TESTS": "ON"
+      }
+    },
+    {
+      "name": "dev-debug",
+      "inherits": "base-ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "dev-release",
+      "inherits": "base-ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "ci-linux-gcc",
+      "inherits": "base-ninja",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER_LAUNCHER": "ccache",
+        "CMAKE_CXX_COMPILER_LAUNCHER": "ccache"
+      }
+    },
+    {
+      "name": "ci-linux-clang",
+      "inherits": "base-ninja",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER_LAUNCHER": "ccache",
+        "CMAKE_CXX_COMPILER_LAUNCHER": "ccache"
+      }
+    },
+    {
+      "name": "ci-windows-msvc",
+      "inherits": "base-ninja"
+    },
+    {
+      "name": "ci-macos-clang",
+      "inherits": "base-ninja"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "dev-debug",
+      "configurePreset": "dev-debug"
+    },
+    {
+      "name": "dev-release",
+      "configurePreset": "dev-release"
+    },
+    {
+      "name": "ci-linux-gcc",
+      "configurePreset": "ci-linux-gcc"
+    },
+    {
+      "name": "ci-linux-clang",
+      "configurePreset": "ci-linux-clang"
+    },
+    {
+      "name": "ci-windows-msvc",
+      "configurePreset": "ci-windows-msvc"
+    },
+    {
+      "name": "ci-macos-clang",
+      "configurePreset": "ci-macos-clang"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "dev-debug",
+      "configurePreset": "dev-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "ci-linux-gcc",
+      "configurePreset": "ci-linux-gcc",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "ci-linux-clang",
+      "configurePreset": "ci-linux-clang",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "ci-windows-msvc",
+      "configurePreset": "ci-windows-msvc",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "ci-macos-clang",
+      "configurePreset": "ci-macos-clang",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}
