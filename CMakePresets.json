@@ -53,6 +53,26 @@
     {
       "name": "ci-macos-clang",
       "inherits": "base-ninja"
+    },
+    {
+      "name": "cxarm",
+      "displayName": "CXARM",
+      "description": "Configure project for CXARM",
+      "inherits": "base-ninja",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "environment": {
+        "CC": "/opt/iar/cxarm/arm/bin/iccarm",
+        "CXX": "/opt/iar/cxarm/arm/bin/iccarm",
+        "ASM": "/opt/iar/cxarm/arm/bin/iasmarm"
+      },
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "cmake/cxarm.cmake",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
     }
   ],
   "buildPresets": [

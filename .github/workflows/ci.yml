@@ -15,8 +15,14 @@ jobs:
     container:
       image: ghcr.io/iarsystems/arm:9.70.2-st
     steps:
-    - name: Invoke the IAR C/C++ Compiler for Arm
-      run: iccarm --version
+      - name: Invoke the IAR C/C++ Compiler for Arm
+        run: iccarm --version
+
+      - name: Configure
+        run: cmake --preset cxarm -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build/cxarm
 
   linux-container:
     runs-on: ubuntu-latest
