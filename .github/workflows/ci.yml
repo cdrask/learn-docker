@@ -6,11 +6,18 @@ on:
       - main
   pull_request:
 
-permissions:
-  contents: read
-  packages: read
+env:
+  IAR_LMS_BEARER_TOKEN: ${{ secrets.IAR_LMS_BEARER_TOKEN }}
 
 jobs:
+  iar-container:
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/iarsystems/arm:9.70.2-st
+    steps:
+    - name: Invoke the IAR C/C++ Compiler for Arm
+      run: iccarm --version
+
   linux-container:
     runs-on: ubuntu-latest
     strategy:
