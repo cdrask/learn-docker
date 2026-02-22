@@ -19,7 +19,7 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 # Alternatively: set(CMAKE_MAKE_PROGRAM "C:/path/to/ninja.exe")
 if(CMAKE_GENERATOR MATCHES "^Ninja.*$")
   find_program(CMAKE_MAKE_PROGRAM
-    NAMES ninja.exe
+    NAMES ninja
     PATHS $ENV{PATH}
           "C:/iar/ewarm-9.70.2/common/bin"
     REQUIRED)
