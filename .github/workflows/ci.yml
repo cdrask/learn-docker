@@ -15,11 +15,13 @@ jobs:
     container:
       image: ghcr.io/iarsystems/arm:9.70.2-st
     steps:
+      - uses: actions/checkout@v4
+
       - name: Invoke the IAR C/C++ Compiler for Arm
         run: iccarm --version
 
       - name: Configure
-        run: cmake --preset cxarm -DCMAKE_BUILD_TYPE=Release
+        run: cmake --preset cxarm
 
       - name: Build
         run: cmake --build build/cxarm
