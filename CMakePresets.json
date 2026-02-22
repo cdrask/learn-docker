@@ -64,7 +64,14 @@
         "lhs": "${hostSystemName}",
         "rhs": "Linux"
       },
+      "environment": {
+          "CC":  "/opt/iar/cxarm/arm/bin/iccarm",
+          "CXX": "/opt/iar/cxarm/arm/bin/iccarm",
+          "ASM": "/opt/iar/cxarm/arm/bin/iasmarm"
+      },
       "cacheVariables": {
+        "SELECTED_TOOL": "cxarm",
+        "TOOLKIT_DIR": "/opt/iar/cxarm/arm",
         "CMAKE_TOOLCHAIN_FILE": "cmake/ewarm.cmake",
         "CMAKE_BUILD_TYPE": "Release"
       }
