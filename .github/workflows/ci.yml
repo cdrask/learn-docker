@@ -21,10 +21,10 @@ jobs:
         run: iccarm --version
 
       - name: Configure
-        run: cmake --preset cxarm
+        run: cmake --preset ewarm
 
       - name: Build
-        run: cmake --build build/cxarm
+        run: cmake --build build/ewarm
 
   linux-container:
     runs-on: ubuntu-latest
