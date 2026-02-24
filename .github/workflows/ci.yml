@@ -25,7 +25,7 @@ jobs:
     container:
       image: docker.io/armswdev/arm-tools:bare-metal-compilers
       env:
-        ARMLMD_LICENSE_FILE: https://mdk-preview.keil.arm.com
+        ARMLM_ONDEMAND_ACTIVATION: KEMDK-COM0@https://mdk-preview.keil.arm.com
         
     steps:
       - name: Invoke the Arm Compiler for Embedded
