@@ -8,6 +8,7 @@ on:
 
 env:
   IAR_LMS_BEARER_TOKEN: ${{ secrets.IAR_LMS_BEARER_TOKEN }}
+  ARMLM_ONDEMAND_ACTIVATION: KEMDK-COM0@https://mdk-preview.keil.arm.com
 
 jobs:
   iar-container:
@@ -24,8 +25,6 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: docker.io/armswdev/arm-tools:bare-metal-compilers
-      env:
-        ARMLM_ONDEMAND_ACTIVATION: KEMDK-COM0@https://mdk-preview.keil.arm.com
         
     steps:
       - name: Invoke the Arm Compiler for Embedded
