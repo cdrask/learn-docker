@@ -20,11 +20,18 @@ jobs:
       - name: Invoke the IAR C/C++ Compiler for Arm
         run: iccarm --version
 
-      - name: Configure
-        run: cmake --preset ewarm
+  keil-container:
+    runs-on: ubuntu-24.04
+    container:
+      image: docker.io/armswdev/arm-tools:bare-metal-compilers
+      env:
+        ARMLMD_LICENSE_FILE: 7010@https://mdk-preview.keil.arm.com
+        
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Build
-        run: cmake --build build/ewarm
+      - name: Invoke the Arm Compiler for Embedded
+        run: armclang --version
 
   linux-container:
     runs-on: ubuntu-latest
