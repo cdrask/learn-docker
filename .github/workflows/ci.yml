@@ -28,8 +28,6 @@ jobs:
         ARMLMD_LICENSE_FILE: 7010@https://mdk-preview.keil.arm.com
         
     steps:
-      - uses: actions/checkout@v4
-
       - name: Invoke the Arm Compiler for Embedded
         run: armclang --version
 
