@@ -24,10 +24,12 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: docker.io/armswdev/arm-tools:bare-metal-compilers
-      env:
-        ARMLMD_LICENSE_FILE: 7010@https://mdk-preview.keil.arm.com
         
     steps:
+      - name: Avtivate license
+        run: |
+          armlm activate --product KEMDK-COM0 --server https://mdk-preview.keil.arm.com
+
       - name: Invoke the Arm Compiler for Embedded
         run: armclang --version
 
