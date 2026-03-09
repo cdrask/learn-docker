@@ -35,7 +35,7 @@ jobs:
           sudo tar -xzf arm-license-manager.tar.gz -C /opt/armlm
 
       - name: Activate License
-        run: /opt/armlm/bin/armlm activate -product 'KEMDK-COM0' -server 'https://mdk-preview.keil.arm.com'
+        run: sudo /opt/armlm/bin/armlm activate -product 'KEMDK-COM0' -server 'https://mdk-preview.keil.arm.com'
 
       - name: Invoke the Arm Compiler for Embedded
         run: armclang --version
