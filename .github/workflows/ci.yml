@@ -8,7 +8,6 @@ on:
 
 env:
   IAR_LMS_BEARER_TOKEN: ${{ secrets.IAR_LMS_BEARER_TOKEN }}
-  ARMLM_ONDEMAND_ACTIVATION: KEMDK-COM0@https://mdk-preview.keil.arm.com
 
 jobs:
   iar-container:
@@ -28,7 +27,7 @@ jobs:
         
     steps:
       - name: Activate License
-        run: armlm activate -product 'KEMDK-COM0' -server 'https://mdk-preview.keil.arm.com'
+        run: /opt/armlm/bin/armlm activate -product 'KEMDK-COM0' -server 'https://mdk-preview.keil.arm.com'
 
       - name: Invoke the Arm Compiler for Embedded
         run: armclang --version
