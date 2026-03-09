@@ -27,7 +27,7 @@ jobs:
         
     steps:
       - name: Activate License
-        run: ls -la /home/ubuntu/
+        run: ls -la /home/ubuntu/AC6/
         # run: /opt/armlm/bin/armlm activate -product 'KEMDK-COM0' -server 'https://mdk-preview.keil.arm.com'
 
       - name: Invoke the Arm Compiler for Embedded
