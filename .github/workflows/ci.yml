@@ -30,9 +30,9 @@ jobs:
     steps:
       - name: Download and Extract Arm License Manager
         run: |
-          wget -O arm-license-manager.tar.gz "${{ env.ARMLM_URL }}"
-          mkdir -p /opt/armlm
-          tar -xzf arm-license-manager.tar.gz -C /opt/armlm
+          sudo wget -O arm-license-manager.tar.gz "${{ env.ARMLM_URL }}"
+          sudo mkdir -p /opt/armlm
+          sudo tar -xzf arm-license-manager.tar.gz -C /opt/armlm
 
       - name: Activate License
         run: /opt/armlm/bin/armlm activate -product 'KEMDK-COM0' -server 'https://mdk-preview.keil.arm.com'
