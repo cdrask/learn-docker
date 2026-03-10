@@ -24,16 +24,8 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: docker.io/armswdev/arm-tools:bare-metal-compilers
-    env:
-      ARMLM_URL: https://artifacts.tools.arm.com/armlm/1.4.0/armlm-1.4.0-lin-x86_64.tar.gz
         
     steps:
-      - name: Download and Extract Arm License Manager
-        run: |
-          sudo wget -O arm-license-manager.tar.gz "${{ env.ARMLM_URL }}"
-          sudo mkdir -p /opt/armlm
-          sudo tar -xzf arm-license-manager.tar.gz -C /opt/armlm
-
       - name: Activate License
         run: sudo /opt/armlm/bin/armlm activate -product 'KEMDK-COM0' -server 'https://mdk-preview.keil.arm.com'
 
